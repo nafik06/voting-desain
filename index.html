@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="voting-container">
+  <h1>Pilih Desain Favoritmu!</h1>
+
+  <!-- Form input nama -->
+  <div class="name-input">
+    <label for="username">Nama Kamu:</label>
+    <input type="text" id="username" placeholder="Masukkan Nama">
+  </div>
+
+  <div class="option-card">
+    <img src="desain/desain1.jpg" alt="Desain 1">
+    <h2>Desain 1</h2>
+    <button class="vote-btn" data-id="1" data-name="Desain 1">Vote</button>
+    <p class="vote-count" id="count-1">0 Votes</p>
+  </div>
+
+  <div class="option-card">
+    <img src="desain/desain2.jpg" alt="Desain 2">
+    <h2>Desain 2</h2>
+    <button class="vote-btn" data-id="2" data-name="Desain 2">Vote</button>
+    <p class="vote-count" id="count-2">0 Votes</p>
+  </div>
+
+  <!-- Daftar nama yang sudah vote -->
+  <div class="voter-list">
+    <h3>Daftar Pemilih:</h3>
+    <ul id="voter-list-ul"></ul>
+  </div>
+</div>
+<script>
+  const votes = {
+    1: 0,
+    2: 0
+  };
+
+  const voters = []; // Array untuk menyimpan daftar voter
+
+  const voteButtons = document.querySelectorAll('.vote-btn');
+  const voterListUl = document.getElementById('voter-list-ul');
+
+  voteButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const usernameInput = document.getElementById('username');
+      const username = usernameInput.value.trim();
+
+      if (username === '') {
+        alert('Masukkan nama terlebih dahulu!');
+        return;
+      }
+
+      const id = button.getAttribute('data-id');
+      const pilihan = button.getAttribute('data-name');
+
+      votes[id] += 1;
+
+      // Simpan nama & pilihannya
+      voters.push({ name: username, choice: pilihan });
+
+      // Update jumlah vote
+      document.getElementById(`count-${id}`).textContent = `${votes[id]} Votes`;
+
+      // Nonaktifkan semua tombol biar user cuma bisa vote sekali
+      voteButtons.forEach(btn => {
+        btn.disabled = true;
+        btn.textContent = 'Voted!';
+        btn.style.backgroundColor = '#28a745';
+      });
+
+      // Update daftar voter
+      renderVoterList();
+
+      // Bersihkan input nama
+      usernameInput.value = '';
+    });
+  });
+
+  function renderVoterList() {
+    voterListUl.innerHTML = '';
+    voters.forEach(voter => {
+      const li = document.createElement('li');
+      li.textContent = `${voter.name} memilih ${voter.choice}`;
+      voterListUl.appendChild(li);
+    });
+  }
+</script>
+
+
+
+
+    
+</body>
+</html>
